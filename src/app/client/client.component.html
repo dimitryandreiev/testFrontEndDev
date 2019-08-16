@@ -1,0 +1,284 @@
+<div class="header">
+
+  <div class="title">
+    Teste para frontend Developer
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn btn-primary" (click)="clientFormModal(clientModal)">Adicionar cliente</button>
+  </div>
+</div>
+
+<div class="title-table">
+  <h4>Lista de clientes</h4>
+</div>
+
+<div class ="client-table">
+  <div class="header">
+    <div class="column col-name">
+      <span>Nome</span>
+    </div>
+
+    <div class="column col-short">
+      <span>CPF</span>
+    </div>
+
+    <div class="column col-short">
+      <span>Telefone</span>
+    </div>
+
+    <div class="column col-short">
+      <span>Data de nascimento</span>
+    </div>
+
+    <div class="column col-address">
+      <span>Endereço</span>
+    </div>
+
+    <div class="column col-vehicle">
+      <span>Veículo</span>
+    </div>
+    <div class="column-action">
+    </div>
+  </div>
+
+  <ng-container *ngIf="clientList && clientList.length > 0">
+    <div class="client-item" *ngFor="let client of clientList; let i = index">
+      <div class="column-fields">
+        <div class="column col-name" [title]="client.name">
+          <span>{{client.name}}</span>
+        </div>
+
+        <div class="column col-short">
+          <span>{{client.cpf | mask: '000.000.000.00'}}</span>
+        </div>
+
+        <div class="column col-short">
+          <span>{{client.phone | mask: '(00)00000-0000'}}</span>
+        </div>
+
+        <div class="column col-short">
+          <span>{{client.birthday | mask: '00/00/0000'}}</span>
+        </div>
+
+        <div class="column col-address" [title]="client.address">
+          <span>{{client.address || '-'}}</span>
+        </div>
+
+        <div class="column col-vehicle" [title]="client.vehicle.Modelo">
+          <span *ngIf="client.vehicle && client.vehicle.Modelo">{{client.vehicle.Modelo}}</span>
+          <span *ngIf="!client.vehicle || !client.vehicle.nome">-</span>
+        </div>
+      </div>
+      <div class="column-action">
+        <div class="action-field edit" (click)="clientFormModal(clientModal, i)">
+          <i class="fa fa-edit"></i>
+        </div>
+        <div class="action-field trash"  (click)="deleteClient(confirmDeleteModal, i)">
+          <i class="fa fa-trash"></i>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <div class="empty-clients" *ngIf="!clientList || clientList.length === 0">
+    <span> Nenhum cliente cadastro no momento</span>
+  </div>
+</div>
+
+<ng-template #clientModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{'Novo cliente' || 'Editar ' + selectedClient.name}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="clientModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12 form-group">
+        <label for="client_name">Nome</label>
+        <input class="form-control"
+          type="text"
+          name="client_name"
+          id="client_name"
+          [(ngModel)]="client.name">
+      </div>
+
+      <div class="col-md-12 form-group">
+        <label for="client_cpf">CPF*</label>
+        <input class="form-control"
+          type="text"
+          name="client_cpf"
+          id="client_cpf"
+          mask="000.000.000.00"
+          [(ngModel)]="client.cpf">
+      </div>
+
+      <div class="col-md-12 form-group">
+        <label for="client_phone">Telefone*</label>
+        <input class="form-control"
+          type="text"
+          name="client_phone"
+          id="client_phone"
+          mask="(00) 00000 - 0000"
+          [(ngModel)]="client.phone">
+      </div>
+
+      <div class="col-md-12 form-group">
+        <label for="client_birthday">Data de nascimento</label>
+        <input class="form-control"
+          type="text"
+          name="client_birthday"
+          id="client_birthday"
+          mask="00/00/0000"
+
+          [(ngModel)]="client.birthday">
+      </div>
+
+      <div class="col-md-12 form-group">
+        <label for="client_address">Endereço</label>
+        <textarea
+          class="form-control"
+          style="resize: none"
+          rows="3"
+          name="client_address"
+          id="client_address"
+          [(ngModel)]="client.address"></textarea>
+      </div>
+
+      <div class="col-md-6 form-group">
+        <label for="vehicle_type">Tipo de Veículo</label>
+        <select class="form-control"
+          type="select"
+          name="vehicle_type"
+          id="vehicle_type"
+          [(ngModel)]="typeSelectedVehicle"
+          (change)="changeTypeVehicle($event)"
+        >
+          <option *ngFor="let type of vehicleTypes">{{type}}</option>
+        </select>
+      </div>
+
+      <div class="col-md-6 form-group">
+        <label for="vehicle_brand">Marca</label> <span *ngIf="loadingBrands">(Carregando...)</span>
+        <select class="form-control"
+          type="select"
+          name="vehicle_brand"
+          id="vehicle_brand"
+          [disabled]="!vehicleBrandList || vehicleBrandList.length == 0"
+          (change)="changeBrandVehicle($event)"
+          [(ngModel)]="brandSelectedVehicle"
+        >
+          <option *ngFor="let brand of vehicleBrandList" [ngValue]="brand">{{brand.nome}}</option>
+        </select>
+      </div>
+
+      <div class="col-md-6 form-group">
+        <label for="vehicle_model">Modelo</label> <span *ngIf="loadingModels">(Carregando...)</span>
+        <select class="form-control"
+          type="select"
+          name="vehicle_model"
+          id="vehicle_model"
+          [disabled]="!vehicleModelList || vehicleModelList.length == 0"
+          (change)="changeModelVehicle($event)"
+          [(ngModel)]="modelSelectedVehicle"
+        >
+          <option *ngFor="let model of vehicleModelList" [ngValue]="model">{{model.nome}}</option>
+        </select>
+      </div>
+
+      <div class="col-md-6 form-group">
+        <label for="vehicle_year">Ano</label> <span *ngIf="loadingYears">(Carregando...)</span>
+        <select class="form-control"
+          type="select"
+          name="vehicle_year"
+          id="vehicle_year"
+          [disabled]="!vehicleYearList || vehicleYearList.length == 0"
+          (change)="changeYearVehicle($event)"
+          [(ngModel)]="yearSelectedVehicle"
+        >
+          <option *ngFor="let year of vehicleYearList" [ngValue]="year">{{year.nome}}</option>
+        </select>
+      </div>
+      <div class="col-md-12 form-group" *ngIf="vehicle || loadingVehicle">
+        <span *ngIf="loadingVehicle">(Carregando Veículo...)</span>
+        <ng-container *ngIf="vehicle">
+          <div><h4>Veículo</h4></div>
+          <div *ngIf="vehicle.AnoModelo">Ano modelo: {{vehicle.AnoModelo}}</div>
+          <div *ngIf="vehicle.CodigoFipe">Código Fipe: {{vehicle.CodigoFipe}}</div>
+          <div *ngIf="vehicle.Combustivel">Combustivel: {{vehicle.Combustivel}}</div>
+          <div *ngIf="vehicle.Marca">Marca: {{vehicle.Marca}}</div>
+          <div *ngIf="vehicle.MesReferencia">Mês Referencia: {{vehicle.MesReferencia}}</div>
+          <div *ngIf="vehicle.Modelo">Modelo: {{vehicle.Modelo}}</div>
+          <div *ngIf="vehicle.SiglaCombustivel">Sigla Combustivel: {{vehicle.SiglaCombustivel}}</div>
+          <div *ngIf="vehicle.TipoVeiculo">Tipo: {{vehicle.TipoVeiculo}}</div>
+          <div *ngIf="vehicle.Valor">Valor: {{vehicle.Valor}}</div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <div class="actions">
+      <button type="button" class="btn btn-light pull-left" (click)="clientModalRef.hide()">
+        <span>Cancelar</span>
+      </button>
+
+      <button type="button"
+        class="btn btn-primary pull-right"
+        *ngIf="!isEdit"
+        [disabled]="!client.name || !client.cpf
+          || !client.phone || !client.address
+          || !client.birthday || !vehicle"
+        (click)="addClient()">
+
+        <span>Adicionar</span>
+
+      </button>
+
+      <button type="button"
+        class="btn btn-primary pull-right"
+        *ngIf="isEdit"
+        [disabled]="!client.name || !client.cpf
+          || !client.phone || !client.address
+          || !client.birthday || !vehicle"
+        (click)="editClient()">
+
+        <span>Editar</span>
+
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #confirmDeleteModal>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Atenção</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="deleteConfirmModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="col-xs-12">
+        <span>Deseja realmente apagar: {{client.name}}</span>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="actions">
+        <button type="button"
+          class="btn btn-light pull-left"
+          (click)="deleteConfirmModalRef.hide()">
+          <span>Cancelar</span>
+        </button>
+
+        <button type="button"
+          class="btn btn-danger pull-right"
+          (click)="confirmDeleteClient()">
+
+          <span>Confirmar</span>
+
+        </button>
+      </div>
+    </div>
+  </ng-template>

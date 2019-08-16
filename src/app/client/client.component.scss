@@ -1,0 +1,135 @@
+.header {
+  width: 1430px;
+
+  .title {
+    font-size: 32px;
+    font-weight: 700;
+    color: grey;
+    text-align: center;
+  }
+
+  .actions {
+    margin-top: 20px;
+    margin-left: 10px;
+  }
+
+}
+
+.title-table {
+  margin-top: 30px;
+  text-align: center;
+  width: 1430px;
+  font-weight: 700;
+  color: #747474;
+}
+
+.empty-clients{
+  margin-left: 16px;
+  margin-top: 32px;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.client-table {
+  margin-top: 32px;
+  margin-left: 16px;
+  margin-right: 16px;
+
+  .col-name {
+    width: 300px;
+  }
+
+  .col-short {
+    width: 150px;
+  }
+
+  .col-address {
+    width: 300px;
+  }
+
+  .col-vehicle {
+    width: 300px;
+  }
+
+  .header {
+    width: 1430px;
+    min-height: 32px;
+
+    .column {
+      height: 32px;
+      background-color: #c9c9c9;
+      text-align: center;
+      border: 1px solid black;
+      float: left;
+      padding-top: 4px;
+
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .column-action {
+      height: 32px;
+      background-color: #c9c9c9;
+      width: 80px;
+      border: 1px solid black;
+      float: left;
+    }
+  }
+
+  .client-item {
+    min-height: 32px;
+    width: 1430px;
+
+    &:hover {
+      background-color: #DADADA;
+    }
+
+    .column-fields {
+
+      .column {
+        height: 32px;
+        text-align: center;
+        border: 1px solid black;
+        float: left;
+
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+    }
+
+    .column-action {
+      width: 80px;
+      height: 32px;
+      border: 1px solid black;
+      float: left;
+      text-align: center;
+
+
+      .action-field {
+        margin-left: 4px;
+        width: 32px;
+        height: 24px;
+        float: left;
+        border-radius: 8px;
+
+        &:hover {
+          cursor: pointer;
+          background-color: #747474;
+
+        }
+      }
+    }
+  }
+}
+
+// Modal
+.modal-footer {
+  .actions {
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 10px;
+  }
+}
