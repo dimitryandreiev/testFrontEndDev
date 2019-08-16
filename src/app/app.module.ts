@@ -10,7 +10,6 @@ import {HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClientComponent } from './client/client.component';
-import { HomeComponent } from './home/home.component';
 import { VehiclesService } from './services/vehicles.service';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
@@ -18,8 +17,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 @NgModule({
   declarations: [
     AppComponent,
-    ClientComponent,
-    HomeComponent
+    ClientComponent
   ],
   imports: [
     BrowserModule,

@@ -186,7 +186,6 @@ export class ClientComponent implements OnInit, OnDestroy {
       .subscribe(
         response => {
           this.vehicle = response;
-          console.log(response);
           this.loadingVehicle = false;
         },
         error => {
